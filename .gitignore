@@ -1,0 +1,22 @@
+# Environments
+venv/
+env/
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Packaging & Distribution
+*.egg-info/
+build/
+dist/
+
+# Local Databases (DuckDB)
+*.db
+*.db.wal
+
+# Secrets & Configs
+.env
+.DS_Store
