@@ -1,8 +1,3 @@
-Here is the complete, professional `README.md` for **Chaos-Stack**. It is formatted exactly like a top-tier open-source Site Reliability Engineering (SRE) tool, ready to be pushed to your GitHub.
-
-Copy and paste this entire block into your `README.md`:
-
-```markdown
 # ⚠️ Chaos-Stack
 
 > A local Chaos Engineering CLI built to intentionally break Docker and emulated AWS infrastructure to validate system resilience.
