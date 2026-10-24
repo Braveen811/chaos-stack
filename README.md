@@ -71,48 +71,59 @@ pip install boto3 docker duckdb rich
 
 ## 🚀 Quick Start Guide
 
-**1. Unleash Chaos:**
-Use the `strike` command to target specific infrastructure layers. You can configure the blast radius using the `--severity` flag.
-
+**1. Start the Emulated Cloud Infrastructure:**
+Spin up a local Moto server (AWS mock) and initialize a test bucket.
 ```bash
-# Terminate a random running container
-python cli/main.py strike --target docker --severity high
-
-# Inject 1000ms latency into a container's network
-python cli/main.py strike --target network --severity high
-
-# Lock down emulated S3 buckets with DenyAll policies
-python cli/main.py strike --target aws --severity high
+docker run -d --name moto-server -p 5000:5000 motoserver/moto
+python -c "import boto3; boto3.client('s3', endpoint_url='http://localhost:5000', aws_access_key_id='test', aws_secret_access_key='test', region_name='us-east-1').create_bucket(Bucket='capstone-frontend-assets')"
 
 ```
 
-**2. Analyze the Damage:**
+**2. Unleash Chaos:**
+Target specific infrastructure layers. You can configure the blast radius using the `--severity` flag.
+
+```bash
+chaos-stack strike --target docker --severity high
+chaos-stack strike --target network --severity high
+chaos-stack strike --target aws --severity high
+
+```
+
+**3. Analyze the Damage:**
 View your historical test data directly from the DuckDB logger.
 
 ```bash
-python cli/main.py report
+chaos-stack report
 
 ```
 
-*Output Example:*
+*Example Output:*
 
 ```text
 📊 Chaos Resilience Analytics (DuckDB)
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Target Layer    ┃ Severity        ┃       Hits ┃
 ┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
-│ NETWORK         │ HIGH            │          1 │
-│ AWS             │ HIGH            │          3 │
-│ DOCKER          │ HIGH            │          2 │
+│ AWS             │ HIGH            │          2 │
+│ DOCKER          │ HIGH            │          1 │
+│ NETWORK         │ HIGH            │          2 │
 └─────────────────┴─────────────────┴────────────┘
 
 ```
 
-**3. Heal the Infrastructure:**
+**4. Heal the Infrastructure:**
 Reverse the cloud infrastructure damage and remove injected IAM policies.
 
 ```bash
-python cli/main.py heal
+chaos-stack heal
+
+```
+
+*Example Output:*
+
+```text
+[*] Reversing all chaos injections. System healing...
+[✔] Removed DenyAll policy from S3 bucket: capstone-frontend-assets
 
 ```
 
